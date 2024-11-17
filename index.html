@@ -9,6 +9,8 @@
 </head>
 <body>
   <h1>Important Work URLs</h1>
+  
+  <!-- Form to add URLs -->
   <form id="url-form">
     <label for="name">Name: </label>
     <input type="text" id="name" required><br><br>
@@ -17,6 +19,9 @@
     <button type="submit">Add URL</button>
   </form>
 
+  <!-- Search bar for searching URLs -->
+  <input type="text" id="search-bar" placeholder="Search URLs..." oninput="searchUrls()">
+  
   <ul id="url-list"></ul>
 
   <script src="app.js"></script>
