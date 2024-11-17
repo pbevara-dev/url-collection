@@ -32,11 +32,11 @@ document.getElementById("url-form").addEventListener("submit", async function (e
 async function searchUrls() {
   const searchQuery = document.getElementById("search-bar").value.toLowerCase();
   
-  // Query Supabase for matching URLs
+  // Query Supabase for matching URLs by name or URL
   const { data, error } = await supabase
     .from('urls')
     .select('*')
-    .ilike('name', `%${searchQuery}%`); // Search by name
+    .or(`name.ilike.%${searchQuery}%,url.ilike.%${searchQuery}%`); // Search by name or URL
 
   if (error) {
     console.error('Error searching URLs:', error);
