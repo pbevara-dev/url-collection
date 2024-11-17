@@ -14,17 +14,22 @@ document.getElementById("url-form").addEventListener("submit", async function (e
     const { data, error } = await supabase
       .from('urls')
       .insert([{ name, url }]);
-    
+
+    // Check for errors
     if (error) {
-      alert('Error inserting data');
+      console.error('Error inserting data:', error);
+      alert('Error inserting data: ' + error.message); // Show error message
     } else {
       const li = document.createElement("li");
       li.innerHTML = `<strong>${name}</strong>: <a href="${url}" target="_blank">${url}</a>`;
       document.getElementById("url-list").appendChild(li);
     }
     
+    // Clear input fields
     document.getElementById("name").value = "";
     document.getElementById("url").value = "";
+  } else {
+    alert('Please fill in both fields.');
   }
 });
 
