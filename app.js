@@ -36,9 +36,8 @@ async function searchUrls() {
   const { data, error } = await supabase
     .from('urls')
     .select('*')
-    .ilike('name', `%${searchQuery}%`)
-    .or(`url.ilike.%${searchQuery}%`);
-  
+    .ilike('name', `%${searchQuery}%`); // Search by name
+
   if (error) {
     console.error('Error searching URLs:', error);
     return;
@@ -58,3 +57,6 @@ async function searchUrls() {
     document.getElementById("url-list").innerHTML = '<li>No matching URLs found.</li>';
   }
 }
+
+// Add event listener to the search button
+document.getElementById("search-button").addEventListener("click", searchUrls);
