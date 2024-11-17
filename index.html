@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>URL Collection</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
   <h1>Important Work URLs</h1>
@@ -18,20 +20,47 @@
   </form>
 
   <!-- Search bar for searching URLs -->
-  <input type="text" id="search-bar" placeholder="Search URLs..." oninput="searchUrls()">
+  <div>
+    <input type="text" id="search-bar" placeholder="Search by name..." />
+    <button id="search-button">Search</button>
+  </div>
   
   <ul id="url-list"></ul>
 
+  <script src="app.js"></script>
   <script>
-    function searchUrls() {
-      console.log('Search input changed');
+    // Function to search URLs based on input from the search bar
+    async function searchUrls() {
       const searchQuery = document.getElementById("search-bar").value.toLowerCase();
-      if (searchQuery) {
-        document.getElementById("url-list").innerHTML = `Searching for: ${searchQuery}`;
+      
+      // Query Supabase for matching URLs
+      const { data, error } = await supabase
+        .from('urls')
+        .select('*')
+        .ilike('name', `%${searchQuery}%`); // Search by name
+
+      if (error) {
+        console.error('Error searching URLs:', error);
+        return;
+      }
+
+      // Clear the URL list before displaying search results
+      document.getElementById("url-list").innerHTML = '';
+      
+      // Display the results
+      if (data.length > 0) {
+        data.forEach(urlData => {
+          const li = document.createElement("li");
+          li.innerHTML = `<strong>${urlData.name}</strong>: <a href="${urlData.url}" target="_blank">${urlData.url}</a>`;
+          document.getElementById("url-list").appendChild(li);
+        });
       } else {
-        document.getElementById("url-list").innerHTML = '';
+        document.getElementById("url-list").innerHTML = '<li>No matching URLs found.</li>';
       }
     }
+
+    // Add event listener to the search button
+    document.getElementById("search-button").addEventListener("click", searchUrls);
   </script>
 </body>
 </html>
