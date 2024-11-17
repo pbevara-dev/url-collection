@@ -2,6 +2,7 @@ const supabaseUrl = 'https://wwhynowfbqstroqxhnfa.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind3aHlub3dmYnFzdHJvcXhobmZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE4MDgyNjUsImV4cCI6MjA0NzM4NDI2NX0.ExABFHnmc3mr0JytWs5P2_SUuvqZ7lg1ijBA9f22_vY';
 const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
+// Function to add a URL to the database
 document.getElementById("url-form").addEventListener("submit", async function (e) {
   e.preventDefault();
   
@@ -26,3 +27,34 @@ document.getElementById("url-form").addEventListener("submit", async function (e
     document.getElementById("url").value = "";
   }
 });
+
+// Function to search URLs based on input from the search bar
+async function searchUrls() {
+  const searchQuery = document.getElementById("search-bar").value.toLowerCase();
+  
+  // Query Supabase for matching URLs
+  const { data, error } = await supabase
+    .from('urls')
+    .select('*')
+    .ilike('name', `%${searchQuery}%`)
+    .or(`url.ilike.%${searchQuery}%`);
+  
+  if (error) {
+    console.error('Error searching URLs:', error);
+    return;
+  }
+
+  // Clear the URL list before displaying search results
+  document.getElementById("url-list").innerHTML = '';
+  
+  // Display the results
+  if (data.length > 0) {
+    data.forEach(urlData => {
+      const li = document.createElement("li");
+      li.innerHTML = `<strong>${urlData.name}</strong>: <a href="${urlData.url}" target="_blank">${urlData.url}</a>`;
+      document.getElementById("url-list").appendChild(li);
+    });
+  } else {
+    document.getElementById("url-list").innerHTML = '<li>No matching URLs found.</li>';
+  }
+}
