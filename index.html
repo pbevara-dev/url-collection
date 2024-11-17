@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>URL Collection</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
   <h1>Important Work URLs</h1>
@@ -24,6 +22,16 @@
   
   <ul id="url-list"></ul>
 
-  <script src="app.js"></script>
+  <script>
+    function searchUrls() {
+      console.log('Search input changed');
+      const searchQuery = document.getElementById("search-bar").value.toLowerCase();
+      if (searchQuery) {
+        document.getElementById("url-list").innerHTML = `Searching for: ${searchQuery}`;
+      } else {
+        document.getElementById("url-list").innerHTML = '';
+      }
+    }
+  </script>
 </body>
 </html>
